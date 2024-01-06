@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { addAxes } from "./axes.js";
+import { addAxes, addAxesLabels, rotateAxesLabels } from "./axes.js";
 
 function main() {
 	const canvas = document.querySelector("#canvas");
@@ -11,8 +11,7 @@ function main() {
 	const near = 0.1;
 	const far = 5;
 	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-	camera.position.z = 2;
-	camera.zoom = 0.5;
+	camera.position.set(0, 0, 4);
 
 	const controls = new OrbitControls(camera, canvas);
 	controls.target.set(0, 0, 0);
@@ -22,6 +21,7 @@ function main() {
 	scene.background = new THREE.Color(0xffffff);
 
 	addAxes(scene);
+	const axesLabels = addAxesLabels(scene);
 
 	function resizeRendererToDisplaySize(renderer) {
 		const canvas = renderer.domElement;
@@ -42,6 +42,8 @@ function main() {
 			camera.aspect = canvas.clientWidth / canvas.clientHeight;
 			camera.updateProjectionMatrix();
 		}
+
+		rotateAxesLabels(axesLabels, camera);
 
 		renderer.render(scene, camera);
 
