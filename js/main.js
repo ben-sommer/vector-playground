@@ -17,7 +17,7 @@ function main() {
 	const near = 0.1;
 	const far = 10;
 	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-	camera.position.set(0, 0, 4);
+	camera.position.set(Math.E, 1.5, Math.E);
 
 	const controls = new OrbitControls(camera, canvas);
 	controls.target.set(0, 0, 0);
@@ -52,6 +52,7 @@ function main() {
 	window.Vector3 = THREE.Vector3;
 	window.scene = scene;
 	window.parse = parse;
+	window.camera = camera;
 
 	function render() {
 		if (resizeRendererToDisplaySize(renderer)) {
