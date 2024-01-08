@@ -1,6 +1,12 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { addAxesLabels, drawGrids, rotateAxesLabels } from "./axes.js";
+import {
+	addAxesLabels,
+	drawGrids,
+	rotateAxesLabels,
+	updateVisibleGridLines,
+} from "./axes.js";
+import { parse, plotLine } from "./plot.js";
 
 function main() {
 	const canvas = document.querySelector("#canvas");
@@ -9,7 +15,7 @@ function main() {
 	const fov = 45;
 	const aspect = 10;
 	const near = 0.1;
-	const far = 5;
+	const far = 10;
 	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 	camera.position.set(0, 0, 4);
 
@@ -21,7 +27,7 @@ function main() {
 	scene.background = new THREE.Color(0xffffff);
 
 	const axesLabels = addAxesLabels(scene);
-	drawGrids(scene);
+	window.lines = drawGrids(scene, camera);
 
 	function resizeRendererToDisplaySize(renderer) {
 		const canvas = renderer.domElement;
@@ -35,6 +41,17 @@ function main() {
 
 		return needResize;
 	}
+
+	updateVisibleGridLines(camera, lines);
+
+	document.onmousemove = () => {
+		updateVisibleGridLines(camera, lines);
+	};
+
+	window.plotLine = plotLine;
+	window.Vector3 = THREE.Vector3;
+	window.scene = scene;
+	window.parse = parse;
 
 	function render() {
 		if (resizeRendererToDisplaySize(renderer)) {
