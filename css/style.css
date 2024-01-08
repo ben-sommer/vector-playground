@@ -32,6 +32,9 @@ html, body {
 
 .panel .entities {
     padding: 12px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
 }
 
 #canvas {
