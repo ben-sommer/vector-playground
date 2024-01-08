@@ -7,6 +7,7 @@ import {
 	updateVisibleGridLines,
 } from "./axes.js";
 import { parse, plotLine } from "./plot.js";
+import "../elements/point-entitiy.js";
 
 function main() {
 	const canvas = document.querySelector("#canvas");

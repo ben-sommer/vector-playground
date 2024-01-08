@@ -3,6 +3,7 @@ html, body {
     padding: 0px;
     height: 100%;
     font-family: Tahoma, sans-serif;
+    --sidebar-width: 300px;
 }
 
 .container {
@@ -12,7 +13,7 @@ html, body {
 }
 
 .panel {
-    width: 240px;
+    width: var(--sidebar-width);
     border-right: 1px solid #ccc;
 }
 
@@ -29,8 +30,12 @@ html, body {
     font-size: 24px;
 }
 
+.panel .entities {
+    padding: 12px;
+}
+
 #canvas {
-    width: calc(100vw - 240px);
+    width: calc(100vw - var(--sidebar-width));
 }
 
 #new {
@@ -39,6 +44,7 @@ html, body {
     border-radius: 4px;
     border: 1px solid #ccc;
     cursor: pointer;
+    outline: none;
 }
 
 #new option {
