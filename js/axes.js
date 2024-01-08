@@ -29,10 +29,10 @@ export const axes = [
 /**
  * @param {THREE.Scene} scene
  */
-export const addAxesLabels = (scene) => {
+export const addAxesLabels = () => {
 	const loader = new FontLoader();
 
-	let labels = [];
+	window.labels = [];
 
 	loader.load("fonts/helvetiker_regular.typeface.json", function (font) {
 		for (const axis of axes) {
@@ -52,30 +52,28 @@ export const addAxesLabels = (scene) => {
 			label.position.set(...axis.direction.multiplyScalar(1.1));
 			label.scale.set(...new THREE.Vector3().setScalar(0.0005));
 
-			scene.add(label);
+			window.scene.add(label);
 
-			labels.push(label);
+			window.labels.push(label);
 		}
 	});
-
-	return labels;
 };
 
 /**
  * @param {THREE.Mesh[]} labels
  * @param {THREE.PerspectiveCamera} camera
  */
-export const rotateAxesLabels = (labels, camera) => {
-	for (const label of labels) {
-		label.quaternion.copy(camera.quaternion);
+export const rotateAxesLabels = () => {
+	for (const label of window.labels) {
+		label.quaternion.copy(window.camera.quaternion);
 	}
 };
 
 /**
  * @param {THREE.Scene} scene
  */
-export const drawGrids = (scene) => {
-	let lines = [];
+export const drawGrids = () => {
+	window.lines = [];
 
 	for (const axis of axes) {
 		for (let i = -10; i <= 10; i += 1) {
@@ -99,7 +97,7 @@ export const drawGrids = (scene) => {
 				);
 				arrow.cone.geometry.translate(0, -0.5, 0);
 
-				scene.add(arrow);
+				window.scene.add(arrow);
 			} else {
 				const vectors = [
 					[axis.direction.clone(), axis.gridOffset.clone()],
@@ -130,9 +128,9 @@ export const drawGrids = (scene) => {
 
 						const line = new THREE.Line(geometry, material);
 
-						scene.add(line);
+						window.scene.add(line);
 
-						lines.push({
+						window.lines.push({
 							mesh: line,
 							axis: axis.label,
 							axisPolarity: j == 0 ? side : i * side,
@@ -144,15 +142,13 @@ export const drawGrids = (scene) => {
 			}
 		}
 	}
-
-	return lines;
 };
 
 /**
  * @param {THREE.PerspectiveCamera} camera
  * @param {Map[]} lines
  */
-export const updateVisibleGridLines = (camera, lines) => {
+export const updateVisibleGridLines = () => {
 	let distances = [];
 
 	for (const axis of axes) {
@@ -163,7 +159,7 @@ export const updateVisibleGridLines = (camera, lines) => {
 				distance: axis.direction
 					.clone()
 					.multiplyScalar(i)
-					.distanceTo(camera.position),
+					.distanceTo(window.camera.position),
 			});
 		}
 	}
@@ -178,7 +174,7 @@ export const updateVisibleGridLines = (camera, lines) => {
 
 	window.polarity = polarity;
 
-	for (const line of lines) {
+	for (const line of window.lines) {
 		if (
 			line.axisPolarity * polarity[line.axis] > 0 &&
 			line.offsetPolarity * polarity[line.offset] > 0

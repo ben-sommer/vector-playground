@@ -16,18 +16,22 @@ function main() {
 	const aspect = 10;
 	const near = 0.1;
 	const far = 10;
-	const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+	window.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
 	camera.position.set(Math.E, 1.5, Math.E);
 
 	const controls = new OrbitControls(camera, canvas);
 	controls.target.set(0, 0, 0);
 	controls.update();
 
-	const scene = new THREE.Scene();
+	window.scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xffffff);
 
-	const axesLabels = addAxesLabels(scene);
-	window.lines = drawGrids(scene, camera);
+	window.plotLine = plotLine;
+	window.Vector3 = THREE.Vector3;
+	window.parse = parse;
+
+	window.axesLabels = addAxesLabels();
+	drawGrids();
 
 	function resizeRendererToDisplaySize(renderer) {
 		const canvas = renderer.domElement;
@@ -38,21 +42,14 @@ function main() {
 		if (needResize) {
 			renderer.setSize(width, height, false);
 		}
-
 		return needResize;
 	}
 
-	updateVisibleGridLines(camera, lines);
+	updateVisibleGridLines();
 
 	document.onmousemove = () => {
-		updateVisibleGridLines(camera, lines);
+		updateVisibleGridLines();
 	};
-
-	window.plotLine = plotLine;
-	window.Vector3 = THREE.Vector3;
-	window.scene = scene;
-	window.parse = parse;
-	window.camera = camera;
 
 	function render() {
 		if (resizeRendererToDisplaySize(renderer)) {
@@ -61,7 +58,7 @@ function main() {
 			camera.updateProjectionMatrix();
 		}
 
-		rotateAxesLabels(axesLabels, camera);
+		rotateAxesLabels();
 
 		renderer.render(scene, camera);
 
