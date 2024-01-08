@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { addAxes, addAxesLabels, rotateAxesLabels } from "./axes.js";
+import { addAxesLabels, drawGrids, rotateAxesLabels } from "./axes.js";
 
 function main() {
 	const canvas = document.querySelector("#canvas");
@@ -20,8 +20,8 @@ function main() {
 	const scene = new THREE.Scene();
 	scene.background = new THREE.Color(0xffffff);
 
-	addAxes(scene);
 	const axesLabels = addAxesLabels(scene);
+	drawGrids(scene);
 
 	function resizeRendererToDisplaySize(renderer) {
 		const canvas = renderer.domElement;

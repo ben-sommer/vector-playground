@@ -6,54 +6,26 @@ const axes = [
 	{
 		label: "X",
 		direction: new THREE.Vector3(1, 0, 0),
+		gridOffset: new THREE.Vector3(0, 0, 1),
 		color: 0x0000ff,
 	},
 	{
 		label: "Y",
 		direction: new THREE.Vector3(0, 1, 0),
+		gridOffset: new THREE.Vector3(1, 0, 0),
 		color: 0x00ff00,
 	},
 	{
 		label: "Z",
 		direction: new THREE.Vector3(0, 0, 1),
+		gridOffset: new THREE.Vector3(0, 1, 0),
 		color: 0xff0000,
 	},
 ];
 
-export const addAxes = (scene) => {
-	for (const axis of axes) {
-		const points = [
-			axis.direction,
-			axis.direction.clone().multiplyScalar(-1),
-		];
-
-		const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-		const material = new THREE.LineBasicMaterial({
-			color: axis.color,
-		});
-
-		const line = new THREE.Line(geometry, material);
-
-		scene.add(line);
-
-		const arrow = new THREE.ArrowHelper(
-			axis.direction,
-			axis.direction.clone().multiplyScalar(-1),
-			2,
-			axis.color,
-			0.05,
-			0.03
-		);
-
-		arrow.cone.geometry.dispose();
-		arrow.cone.geometry = new THREE.CylinderGeometry(0, 0.5, 1, 10, 1);
-		arrow.cone.geometry.translate(0, -0.5, 0);
-
-		scene.add(arrow);
-	}
-};
-
+/**
+ * @param {THREE.Scene} scene
+ */
 export const addAxesLabels = (scene) => {
 	const loader = new FontLoader();
 
@@ -87,13 +59,72 @@ export const addAxesLabels = (scene) => {
 };
 
 /**
- * Represents a book.
- * @constructor
  * @param {THREE.Mesh[]} labels
  * @param {THREE.PerspectiveCamera} camera
  */
 export const rotateAxesLabels = (labels, camera) => {
 	for (const label of labels) {
 		label.quaternion.copy(camera.quaternion);
+	}
+};
+
+/**
+ * @param {THREE.Scene} scene
+ */
+export const drawGrids = (scene) => {
+	for (const axis of axes) {
+		for (let i = -10; i <= 10; i += 1) {
+			if (i == 0) {
+				const arrow = new THREE.ArrowHelper(
+					axis.direction,
+					axis.direction.clone().multiplyScalar(-1),
+					2,
+					axis.color,
+					0.05,
+					0.03
+				);
+
+				arrow.cone.geometry.dispose();
+				arrow.cone.geometry = new THREE.CylinderGeometry(
+					0,
+					0.5,
+					1,
+					10,
+					1
+				);
+				arrow.cone.geometry.translate(0, -0.5, 0);
+
+				scene.add(arrow);
+			} else {
+				const vectors = [
+					axis.gridOffset.clone(),
+					axis.direction.clone().cross(axis.gridOffset),
+				];
+
+				for (const vector of vectors) {
+					const points = [
+						axis.direction
+							.clone()
+							.add(vector.clone().multiplyScalar(i / 10)),
+						axis.direction
+							.clone()
+							.add(vector.clone().multiplyScalar(-i / 10))
+							.multiplyScalar(-1),
+					];
+
+					const geometry = new THREE.BufferGeometry().setFromPoints(
+						points
+					);
+
+					const material = new THREE.LineBasicMaterial({
+						color: i == 0 ? axis.color : 0xaaaaaa,
+					});
+
+					const line = new THREE.Line(geometry, material);
+
+					scene.add(line);
+				}
+			}
+		}
 	}
 };
