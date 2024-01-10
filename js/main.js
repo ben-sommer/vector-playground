@@ -8,6 +8,7 @@ import {
 } from "./axes.js";
 import { parse, plotLine } from "./plot.js";
 import "../elements/line-entity.js";
+import "../elements/plane-entity.js";
 import "../elements/point-entity.js";
 import "../elements/vector-entity.js";
 import "./interface.js";
