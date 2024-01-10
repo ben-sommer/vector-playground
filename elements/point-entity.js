@@ -58,7 +58,7 @@ class PointEntityElement extends HTMLElement {
 				.header {
 					display: flex;
 					justify-content: space-between;
-					align-items: top;
+					align-items: start;
 				}
 
 				.remove {
